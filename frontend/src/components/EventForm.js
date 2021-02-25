@@ -1,4 +1,5 @@
-import React from "react"
+import React from "react";
+import PropTypes from "prop-types";
 
 const EventForm = props => (
 	<div>
@@ -25,13 +26,18 @@ const EventForm = props => (
 				value={props.location}
 				onChange={props.handleInput}
 			/>
-			<input
-				type="submit"
-				value="Make Event"
-				disabled={!props.formValid}
-			/>
+			<input type="submit" value="Make Event" disabled={!props.formValid} />
 		</form>
 	</div>
-)
+);
 
-export default EventForm
+EventForm.propTypes = {
+	handleSubmit: PropTypes.func.isRequired,
+	handleInput: PropTypes.func.isRequired,
+	formValid: PropTypes.bool.isRequired,
+	title: PropTypes.string.isRequired,
+	start_datetime: PropTypes.string.isRequired,
+	location: PropTypes.string.isRequired,
+};
+
+export default EventForm;

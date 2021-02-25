@@ -1,12 +1,17 @@
-import React from "react"
-import Event from "./Event"
+import React from "react";
+import Event from "./Event";
+import PropTypes from "prop-types";
 
 const EventsList = props => (
 	<div>
 		{props.events.map(function (event) {
-			return <Event key={event.id} event={event} />
+			return <Event key={event.id} event={event} />;
 		})}
 	</div>
-)
+);
 
-export default EventsList
+Event.propTypes = {
+	event: PropTypes.object.isRequired,
+};
+
+export default EventsList;

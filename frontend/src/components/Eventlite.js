@@ -20,13 +20,37 @@ class Eventlite extends React.Component {
 		};
 	}
 
+	static formValidations = {
+		title: [
+			value => {
+				return validations.checkMinLength(value, 3);
+			},
+		],
+		start_datetime: [
+			value => {
+				return validations.checkMinLength(value, 1);
+			},
+			value => {
+				return validations.timeShouldBeInTheFuture(value);
+			},
+		],
+
+		location: [
+			value => {
+				return validations.checkMinLength(value, 1);
+			},
+		],
+	};
+
 	handleInput = e => {
 		e.preventDefault();
 		const name = e.target.name;
 		const value = e.target.value;
 		const newState = {};
 		newState[name] = { ...this.state[name], value: value };
-		this.setState(newState, () => this.validateField(name, value));
+		this.setState(newState, () =>
+			this.validateField(name, value, Eventlite.formValidations[name])
+		);
 	};
 
 	handleSubmit = e => {
@@ -49,26 +73,6 @@ class Eventlite extends React.Component {
 		this.setState({ formErrors: {} });
 	}
 
-	// validateForm() {
-	// 	let formErrors = {}
-	// 	let formValid = true
-	// 	if (this.state.title.length <= 2) {
-	// 		formErrors.title = ["is too short (minimum is 3 characters)"]
-	// 		formValid = false
-	// 	}
-	// 	if (this.state.location.length === 0) {
-	// 		formErrors.location = ["can't be blank"]
-	// 		formValid = false
-	// 	}
-	// 	if (this.state.start_datetime.length === 0) {
-	// 		formErrors.start_datetime = ["can't be blank"]
-	// 		formValid = false
-	// 	} else if (Date.parse(this.state.start_datetime) <= Date.now()) {
-	// 		formErrors.start_datetime = ["can't be in the past"]
-	// 		formValid = false
-	// 	}
-	// 	this.setState({ formValid: formValid, formErrors: formErrors })
-	// }
 	validateForm() {
 		this.setState({
 			formValid:
@@ -78,35 +82,18 @@ class Eventlite extends React.Component {
 		});
 	}
 
-	validateField(fieldName, fieldValue) {
+	validateField(fieldName, fieldValue, fieldValidations) {
 		let fieldValid = true;
-		let errors = [];
-		let fieldError = "";
-		switch (fieldName) {
-			case "title":
-				[fieldValid, fieldError] = validations.checkMinLength(fieldValue, 3);
-				if (!fieldValid) {
-					errors = errors.concat([fieldError]);
-				}
-				break;
+		let errors = fieldValidations.reduce((errors, validation) => {
+			let [valid, fieldError] = validation(fieldValue);
+			if (!valid) {
+				errors = errors.concat([fieldError]);
+			}
+			return errors;
+		}, []);
 
-			case "location":
-				[fieldValid, fieldError] = validations.checkMinLength(fieldValue, 1);
-				if (!fieldValid) {
-					errors = errors.concat([fieldError]);
-				}
-				break;
-			case "start_datetime":
-				[fieldValid, fieldError] = validations.checkMinLength(fieldValue, 1);
-				if (!fieldValid) {
-					errors = errors.concat([fieldError]);
-				}
-				[fieldValid, fieldError] = validations.timeShouldBeInTheFuture(fieldValue);
-				if (!fieldValid) {
-					errors = errors.concat([fieldError]);
-				}
-				break;
-		}
+		fieldValid = errors.length === 0;
+
 		const newState = { formErrors: { ...this.state.formErrors, [fieldName]: errors } };
 		newState[fieldName] = { ...this.state[fieldName], valid: fieldValid };
 		this.setState(newState, this.validateForm);

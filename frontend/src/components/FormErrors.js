@@ -1,4 +1,5 @@
-import React from "react"
+import React from "react";
+import PropTypes from "prop-types";
 
 const FormErrors = props => (
 	<div>
@@ -8,10 +9,14 @@ const FormErrors = props => (
 					<p>
 						{formErrorField} {error}
 					</p>
-				)
-			})
+				);
+			});
 		})}
 	</div>
-)
+);
 
-export default FormErrors
+FormErrors.propTypes = {
+	formErrors: PropTypes.object,
+};
+
+export default FormErrors;
