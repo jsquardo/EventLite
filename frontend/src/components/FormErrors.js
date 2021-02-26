@@ -16,7 +16,7 @@ const FormErrors = props => (
 );
 
 FormErrors.propTypes = {
-	formErrors: PropTypes.object,
+	formErrors: PropTypes.array,
 };
 
 export default FormErrors;

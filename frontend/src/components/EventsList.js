@@ -11,7 +11,7 @@ const EventsList = props => (
 );
 
 EventsList.propTypes = {
-	events: PropTypes.array.isRequired,
+	events: PropTypes.array,
 };
 
 export default EventsList;

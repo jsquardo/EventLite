@@ -16,31 +16,31 @@ class Eventlite extends React.Component {
 			title: { value: "", valid: false },
 			start_datetime: { value: "", valid: false },
 			location: { value: "", valid: false },
-			formErrors: {},
-			formValid: false,
+			// formErrors: [],
+			// formValid: false,
 		};
 	}
 
-	static formValidations = {
-		title: [
-			value => {
-				return validations.checkMinLength(value, 3);
-			},
-		],
-		start_datetime: [
-			value => {
-				return validations.checkMinLength(value, 1);
-			},
-			value => {
-				return validations.timeShouldBeInTheFuture(value);
-			},
-		],
-		location: [
-			value => {
-				return validations.checkMinLength(value, 1);
-			},
-		],
-	};
+	// static formValidations = {
+	// 	title: [
+	// 		value => {
+	// 			return validations.checkMinLength(value, 3);
+	// 		},
+	// 	],
+	// 	start_datetime: [
+	// 		value => {
+	// 			return validations.checkMinLength(value, 1);
+	// 		},
+	// 		value => {
+	// 			return validations.timeShouldBeInTheFuture(value);
+	// 		},
+	// 	],
+	// 	location: [
+	// 		value => {
+	// 			return validations.checkMinLength(value, 1);
+	// 		},
+	// 	],
+	// };
 
 	componentDidMount() {
 		axios({
@@ -57,9 +57,7 @@ class Eventlite extends React.Component {
 		const value = e.target.value;
 		const newState = {};
 		newState[name] = { ...this.state[name], value: value };
-		this.setState(newState, () =>
-			this.validateField(name, value, Eventlite.formValidations[name])
-		);
+		this.setState(newState);
 	};
 
 	handleSubmit = e => {
@@ -85,35 +83,35 @@ class Eventlite extends React.Component {
 			});
 	};
 
-	validateField(fieldName, fieldValue, fieldValidations) {
-		let fieldValid = true;
-		let errors = fieldValidations.reduce((errors, validation) => {
-			let [valid, fieldError] = validation(fieldValue);
-			if (!valid) {
-				errors = errors.concat([fieldError]);
-			}
-			return errors;
-		}, []);
+	// validateField(fieldName, fieldValue, fieldValidations) {
+	// 	let fieldValid = true;
+	// 	let errors = fieldValidations.reduce((errors, validation) => {
+	// 		let [valid, fieldError] = validation(fieldValue);
+	// 		if (!valid) {
+	// 			errors = errors.concat([fieldError]);
+	// 		}
+	// 		return errors;
+	// 	}, []);
 
-		fieldValid = errors.length === 0;
+	// 	fieldValid = errors.length === 0;
 
-		const newState = { formErrors: { ...this.state.formErrors, [fieldName]: errors } };
-		newState[fieldName] = { ...this.state[fieldName], valid: fieldValid };
-		this.setState(newState, this.validateForm);
-	}
+	// 	const newState = { formErrors: { ...this.state.formErrors, [fieldName]: errors } };
+	// 	newState[fieldName] = { ...this.state[fieldName], valid: fieldValid };
+	// 	this.setState(newState, this.validateForm);
+	// }
 
-	validateForm() {
-		this.setState({
-			formValid:
-				this.state.title.valid &&
-				this.state.location.valid &&
-				this.state.start_datetime.valid,
-		});
-	}
+	// validateForm() {
+	// 	this.setState({
+	// 		formValid:
+	// 			this.state.title.valid &&
+	// 			this.state.location.valid &&
+	// 			this.state.start_datetime.valid,
+	// 	});
+	// }
 
-	resetFormErrors() {
-		this.setState({ formErrors: {} });
-	}
+	// resetFormErrors() {
+	// 	this.setState({ formErrors: {} });
+	// }
 
 	addNewEvent = event => {
 		const events = [...this.state.events, event].sort(function (a, b) {
@@ -125,7 +123,7 @@ class Eventlite extends React.Component {
 	render() {
 		return (
 			<div>
-				<FormErrors formErrors={this.state.formErrors} />
+				{/* <FormErrors formErrors={this.state.formErrors} /> */}
 				<EventForm
 					handleSubmit={this.handleSubmit}
 					handleInput={this.handleInput}
