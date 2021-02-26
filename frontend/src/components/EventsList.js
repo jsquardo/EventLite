@@ -10,8 +10,8 @@ const EventsList = props => (
 	</div>
 );
 
-Event.propTypes = {
-	event: PropTypes.object.isRequired,
+EventsList.propTypes = {
+	events: PropTypes.array.isRequired,
 };
 
 export default EventsList;

@@ -11,13 +11,14 @@ class Eventlite extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			events: this.props.events,
+			events: [],
 			title: { value: "", valid: false },
 			start_datetime: { value: "", valid: false },
 			location: { value: "", valid: false },
 			formErrors: {},
 			formValid: false,
 		};
+		this.logo = React.createRef();
 	}
 
 	static formValidations = {
@@ -42,6 +43,15 @@ class Eventlite extends React.Component {
 		],
 	};
 
+	componentDidMount() {
+		axios({
+			method: "GET",
+			url: "http://localhost:3001/events",
+		}).then(response => {
+			this.setState({ events: response.data });
+		});
+	}
+
 	handleInput = e => {
 		e.preventDefault();
 		const name = e.target.name;
@@ -60,27 +70,21 @@ class Eventlite extends React.Component {
 			start_datetime: this.state.start_datetime.value,
 			location: this.state.location.value,
 		};
+		axios({
+			method: "POST",
+			url: "http://localhost:3001/events",
+			// headers: JSON.parse(localStorage.user),
+			data: { event: newEvent },
+		})
+			.then(response => {
+				this.addNewEvent(response.data);
+				this.resetFormErrors();
+			})
+			.catch(error => {
+				console.log(error.response.data);
+				this.setState({ formErrors: error.response.data });
+			});
 	};
-
-	addNewEvent = event => {
-		const events = [event, ...this.state.events].sort(function (a, b) {
-			return new Date(a.start_datetime - b.start_datetime);
-		});
-		this.setState({ events: events });
-	};
-
-	resetFormErrors() {
-		this.setState({ formErrors: {} });
-	}
-
-	validateForm() {
-		this.setState({
-			formValid:
-				this.state.title.valid &&
-				this.state.location.valid &&
-				this.state.start_datetime.valid,
-		});
-	}
 
 	validateField(fieldName, fieldValue, fieldValidations) {
 		let fieldValid = true;
@@ -99,32 +103,45 @@ class Eventlite extends React.Component {
 		this.setState(newState, this.validateForm);
 	}
 
-	componentDidMount() {
-		axios({
-			method: "GET",
-			url: "http://localhost:3001/events",
-		})
-			.then(response => {
-				this.addNewEvent(response.data);
-				this.resetFormErrors();
-			})
-			.catch(error => {
-				console.log(error.response.data);
-				this.setState({ formErrors: error.response.data });
-			});
+	validateForm() {
+		this.setState({
+			formValid:
+				this.state.title.valid &&
+				this.state.location.valid &&
+				this.state.start_datetime.valid,
+		});
 	}
+
+	resetFormErrors() {
+		this.setState({ formErrors: {} });
+	}
+
+	addNewEvent = event => {
+		const events = [...this.state.events, event].sort(function (a, b) {
+			return new Date(a.start_datetime - new Date(b.start_datetime));
+		});
+		this.setState({ events: events });
+	};
+
+	changeLogoColour = () => {
+		const colors = ["red", "blue", "green", "violet"];
+		this.logo.current.style.color = colors[Math.floor(Math.random() * colors.length)];
+	};
 
 	render() {
 		return (
 			<div>
+				{/* <h1 className="logo" ref={this.logo}>
+					Eventlite
+				</h1> */}
 				<FormErrors formErrors={this.state.formErrors} />
 				<EventForm
 					handleSubmit={this.handleSubmit}
 					handleInput={this.handleInput}
 					formValid={this.state.formValid}
-					title={this.state.title}
-					start_datetime={this.state.start_datetime}
-					location={this.state.location}
+					title={this.state.title.value}
+					start_datetime={this.state.start_datetime.value}
+					location={this.state.location.value}
 				/>
 				<EventsList events={this.state.events} />
 			</div>

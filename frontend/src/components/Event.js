@@ -13,7 +13,7 @@ const Event = props => {
 	);
 };
 
-Event.PropTypes = {
+Event.propTypes = {
 	event: PropTypes.shape({
 		title: PropTypes.string.isRequired,
 		start_datetime: PropTypes.string.isRequired,
