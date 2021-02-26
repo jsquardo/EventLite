@@ -1,12 +1,13 @@
 import React from "react";
 import axios from "axios";
+import validations from "./validations";
 
 import EventsList from "./EventsList";
 import EventForm from "./EventForm";
 import FormErrors from "./FormErrors";
-import validations from "./validations";
 
 import "./Eventlite.css";
+
 class Eventlite extends React.Component {
 	constructor(props) {
 		super(props);
@@ -18,7 +19,6 @@ class Eventlite extends React.Component {
 			formErrors: {},
 			formValid: false,
 		};
-		this.logo = React.createRef();
 	}
 
 	static formValidations = {
@@ -35,7 +35,6 @@ class Eventlite extends React.Component {
 				return validations.timeShouldBeInTheFuture(value);
 			},
 		],
-
 		location: [
 			value => {
 				return validations.checkMinLength(value, 1);
@@ -118,22 +117,14 @@ class Eventlite extends React.Component {
 
 	addNewEvent = event => {
 		const events = [...this.state.events, event].sort(function (a, b) {
-			return new Date(a.start_datetime - new Date(b.start_datetime));
+			return new Date(a.start_datetime) - new Date(b.start_datetime);
 		});
 		this.setState({ events: events });
-	};
-
-	changeLogoColour = () => {
-		const colors = ["red", "blue", "green", "violet"];
-		this.logo.current.style.color = colors[Math.floor(Math.random() * colors.length)];
 	};
 
 	render() {
 		return (
 			<div>
-				{/* <h1 className="logo" ref={this.logo}>
-					Eventlite
-				</h1> */}
 				<FormErrors formErrors={this.state.formErrors} />
 				<EventForm
 					handleSubmit={this.handleSubmit}

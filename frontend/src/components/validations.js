@@ -8,6 +8,7 @@ const validations = {
 			return [false, `length should be at least ${minLength} characters`];
 		}
 	},
+
 	timeShouldBeInTheFuture: function (time) {
 		if (Date.parse(time) > Date.now()) {
 			return [true, ""];

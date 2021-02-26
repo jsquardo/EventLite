@@ -1,6 +1,6 @@
 import React from "react";
-import Event from "./Event";
 import PropTypes from "prop-types";
+import Event from "./Event";
 
 const EventsList = props => (
 	<div>
