@@ -14,4 +14,8 @@ EventsList.propTypes = {
 	events: PropTypes.array,
 };
 
+a = 2 + 2
+
+a 
+
 export default EventsList;

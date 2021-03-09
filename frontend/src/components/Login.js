@@ -13,6 +13,15 @@ class Login extends React.Component {
 			},
 		}).then(response => {
 			console.log(response);
+			localStorage.setItem(
+				"user",
+				JSON.stringify({
+					"access-token": response.headers["access-token"],
+					client: response.headers["client"],
+					uid: response.data.data.uid,
+				})
+			);
+			window.location = "/";
 		});
 	};
 

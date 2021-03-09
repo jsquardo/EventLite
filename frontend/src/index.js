@@ -1,3 +1,8 @@
+({
+	babel: true,
+	plugins: ["jsdom-quokka-plugin"],
+});
+
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
